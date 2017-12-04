@@ -1,0 +1,17 @@
+Problem statement: Read the drivers data from transaction text file from HDFS path /user/cloudera/data/Drivers. Generate a report with November changes to the drivers (Use transaction creation date MM/DD/CCYY). Also mask the SPI data in the report. Save the report in HDFS location /user/cloudera/Practice/DriverNovReport.
+
+Input file Driver structure is of type.
+
+1. Creation_Date  Char(10) /* MM/DD/CCYY format */
+2. FirstName      Varchar(30)
+3. MidInitial     Char(1)
+4. LastName       Varchar(30)
+5. DOB            Char(10)  /*Date of Birth MM/DD/CCYY */
+6. SSN            Number(9) /* either Null or numeric value */
+7. License#       Varchar(25)
+8. License_State  Char(02)  /* Alpha state code */
+9. Discounts changed  Char(01)  /* Y or N  */
+10. Accident_Voilation Char(01) /* Y or N  */
+11. Claims_In_3Yrs  Char(01)    /* Y or N  */
+12. Claim_amt     Number(6)
+
