@@ -1,4 +1,4 @@
-Preparation plan for CCA175 exam for me.
+Preparation plan.
 1. spark-shell.  Review of RDD creation, viewing and saving data to HDFC. Reading and Writing different file formats.
    different transformations, string manipulations. Filtering, Sorting, Aggregation, Ranking. DataFrames, SparkSQL, Use cases practice.
 2. Hive basics recap. 
