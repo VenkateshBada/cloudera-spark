@@ -1,0 +1,15 @@
+1. Reading from local file system. First use Source.fromFile from scala API and then create RDD
+    val employeeFile = scala.io.Source.fromFile("/home/cloudera/data/employee/part-m-00000").getLines
+    val employeeRDD = sc.parallelize(emplyeeFile)
+    
+
+2. Reading from HDFS.
+ (a) Read a text file.
+     val employeeRDD = sc.textFile("/user/cloudera/data/employee")
+  (b) Reading a sequence file.
+     val employeeRDD = sc.sequenceFile("/user/cloudera/data/employee")
+  (c) Reading using a DataFrame.
+     val employeeRDD = sqlContext.load("/user/cloudera/data/employee", "text")
+     or
+     val employeeRDD = sqlContext.read.text("/user/cloudera/data/employee")
+     *above text can be replaced with different file formats like json, etc..
