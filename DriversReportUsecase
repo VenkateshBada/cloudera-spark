@@ -34,10 +34,10 @@ def maskDL(DL: String): String = {
   
   DL.length match{
    case 1 => DL = "X"
-   case 2,3,4 => { len1 =  DL.length - 1
+   case 2 | 3 | 4 => { len1 =  DL.length - 1
        DL = "X" + substring(DL,len1)
       }
-   case 5,6 => {len1 = DL.length -2
+   case 5 | 6 => {len1 = DL.length -2
       DL = "X" + substring(DL,len1)
       }
    case _ => { len1 = Dl.length - 4
