@@ -15,8 +15,8 @@ Input file Driver structure is of type.
 11. Claims_In_3Yrs  Char(01)    /* Y or N  */
 12. Claim_amt     Number(6)
 
-
 Solution:
+=========
 
 // Need to mask SSN and Driver's license#, so create two functions maskSSN and maskDL to mask the SPI data.
 
@@ -55,6 +55,8 @@ def maskDL(DL: String): String = {
 
  DL1
 }
+
+//Actual logic here.
 
 val DriversNovData = sc.textFile("/user/cloudera/data/Drivers").filter(d => substring(d.split(",")(0),0,2) == "11" && substring(d.split(",")(0),6) == "2017")
 
