@@ -28,26 +28,30 @@ def maskSSN(SSN: String): String = {
   SSN
 }
 
-/* need to fix the code.
 def maskDL(DL: String): String = {
-  if DL.exists(x => x!= null && x != "") {
-  
-  DL.length match{
-   case 1 => DL = "X"
-   case 2 | 3 | 4 => { len1 =  DL.length - 1
-       DL = "X" + substring(DL,len1)
+  var len1 = 0
+  var DL1 = ""
+
+  if (DL.exists(x => x != null && x != "")) {
+    DL.length match{
+      case 1 => DL1 = "X"
+      case 2 | 3 | 4 => {
+       DL1 = "X" + DL.substring(1)
       }
-   case 5 | 6 => {len1 = DL.length -2
-      DL = "X" + substring(DL,len1)
+      case 5 | 6 => DL1 = "XX" + DL.substring(2)
+      case _ => {
+       len1 = DL.length - 4
+       DL1 = DL
+       DL1.replace
+       DL1 = "XXXXXX" + DL.substring(len1)
       }
-   case _ => { len1 = Dl.length - 4
-   DL = "X" + substring(DL,len1)
-   }
-  }  
+    }
+
+  }
   else
-   DL = ""
-  
- DL
+   DL1 = ""
+
+ DL1
 }
 
 
