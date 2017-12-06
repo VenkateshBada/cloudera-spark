@@ -28,7 +28,6 @@ def maskSSN(SSN: String): String = {
   SSN
 }
 
-
 def maskDL(DL: String): String = {
   var len1 = 0
   var DL1 = DL
