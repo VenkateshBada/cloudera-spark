@@ -1,5 +1,5 @@
 1. Reading from local file system. First use Source.fromFile from scala API and then create RDD
-    val employeeFile = scala.io.Source.fromFile("/home/cloudera/data/employee/part-m-00000").getLines
+    val employeeFile = scala.io.Source.fromFile("/home/cloudera/data/employee/part-m-00000").getLines.toList
     val employeeRDD = sc.parallelize(emplyeeFile)
     
 
