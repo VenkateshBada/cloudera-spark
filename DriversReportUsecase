@@ -42,10 +42,10 @@ def maskDL(DL: String): String = {
       case 5 | 6 => {
       len1 = DL.length - 2
        DL1 = DL1.substring(0,len1).replaceAll("[A-Za-z0-9]", "X") + DL.substring(len1)
+       }
       case _ => {
        len1 = DL.length - 4
-       DL1 = DL
-       DL1 = DL1.substring(0,len1).replaceALL("[0-9A-Za-z]","X") + DL.substring(len1)
+       DL1 = DL1.substring(0,len1).replaceAll("[0-9A-Za-z]","X") + DL.substring(len1)
       }
     }
 
@@ -55,7 +55,6 @@ def maskDL(DL: String): String = {
 
  DL1
 }
-
 //Actual logic here.
 
 val DriversNovData = sc.textFile("/user/cloudera/data/Drivers").filter(d => substring(d.split(",")(0),0,2) == "11" && substring(d.split(",")(0),6) == "2017")
