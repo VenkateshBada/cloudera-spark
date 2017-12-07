@@ -21,11 +21,12 @@ Solution:
 // Need to mask SSN and Driver's license#, so create two functions maskSSN and maskDL to mask the SPI data.
 
 def maskSSN(SSN: String): String = {
-  if SSN.exists(x => x != null && x != "")
-     SSN = "XXXXX" + substring(SSN,5)
+  var SSN1 = ""
+  if (SSN.exists(x => x != null && x != ""))
+     SSN1 = "XXXXX" + SSN.substring(5)
   else
-    SSN = ""
-  SSN
+    SSN1 = ""
+  SSN1
 }
 
 def maskDL(DL: String): String = {
