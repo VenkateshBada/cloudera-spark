@@ -13,3 +13,6 @@
      or
      val employeeRDD = sqlContext.read.text("/user/cloudera/data/employee")
      *above text can be replaced with different file formats like json, etc..
+     
+3. Storing to HDFC. Only text File format needs delimiters and other formats such as jSon, parquet do not need delimiters to specify.
+   (a) save 
