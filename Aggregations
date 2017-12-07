@@ -1,0 +1,42 @@
+1. countByKey --> returns hash map. need to convert to RDD before saving the data to HDFS.
+  val orderStatusCount = sc.textFile("/user/cloudera/data/retail_db/orders").map(rec => (rec.split(",")(3),"")).countByKey.toList
+  sc.parallelize(orderStatusCount).saveAsTextFile("/user/cloudera/Practice/Aggregation/orderStatusCount")
+
+2. filter -> filter  returns RDD, if performed on RDD.
+   val ordersCompleteClosed = sc.textFile("/user/cloudera/data/retail_db/orders").filter(rec => {
+     val o = rec.split(",")
+     (o(3) == "COMPLETE" || o(3) == "CLOSED")
+     })
+     
+ 3. reduceByKey -> can be used if both input and outputs will be of same paired RDDs.
+    Show the total amount of each order. orderItemsMap has repetition of order_ids. ordersByTotal will have unique sum of each of order 
+    and unique order.
+    val orderItemsMap = sc.textFile("/user/cloudera/data/retail_db/orders").map(rec => (rec.split(",")(1).toInt,rec.split(",")  (4).toFloat))
+    val ordersByTotal = orderItems.reduceByKey((a,b) => a + b)
+    
+    Also reduceByKey can be used to find min or max orders.
+    
+    val minOfOrder = orderItemsMap.reduceByKey((a,b) => if (a < b) a else b)
+    
+  4. aggregateByKey --> The input and ourts will not be of same type.
+     Below one finds both each orders total and max order by order id in a single step. If reduceByKey is used then it will be two steps.
+     
+     orderItemsMap.aggregateByKey(0.0f, 0.0f)((inter, subtotal) => (inter._1 + subtotal, if (inter._2 > subtotal) inter._2 else subtotal),
+      (total, inter) => (total._1 + inter._1, if (total._2 > inter._2) total._2 else inter._2))
+      
+      First argument (0.0f, 0.0f) is for inititalizing the desired output with tuple (total amount, max order amount).
+      
+      Sequence arguments => (inter,subtotal) => (inter._1 + subtotal, if (inter._2 > subtotal) inter._2 else subtotal) 
+      Here inter argument is actually a tuple and of output type and subtotal is input of order_subtotal.
+      Output is (add first argument from the tuple with subtotal, second argument is min of second argumnt from the tuple with subtotal)
+      
+      Combiner arguments => (total, inter) => (total._1 + inter._1, if (total._2 > inter._2) total._2 else inter._2)
+      Add first arguments from intermediate outputs and second argument is comparing the interemediate results for maximum value.
+      
+   5. sortByKey() --> Default is ascending order. false argument to be supplied for descending order.
+      Sort products by category in ascending and price in descending.
+      
+      val productsRDD = sc.textFile("/user/cloudera/data/retail_db/products").filter(rec => rec.split(",")(4) != "").
+        map(rec => ((rec.split(",")(1).toInt, -rec.split(",")(4).toFloat),rec)).sortByKey().map(p => p._2)
+      
+    6. groupByKey() --> 
