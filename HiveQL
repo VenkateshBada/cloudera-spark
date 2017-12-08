@@ -16,7 +16,8 @@ zip int)
 row format delimited fields terminated by ','
 stored as textfile;
 
-4. Load files from local file system. The file in local or HDFS location be deleted with load command.
+4. Load files from local file system. The file in local or HDFS location be deleted with load command. If it is HDFS then remove local.
+override option can be used if we need to override the data.
 
 Load data local inpath '/home/maria_dev/data/retail_db/customers' into table customers;
 
