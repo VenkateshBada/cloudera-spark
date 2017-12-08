@@ -1,0 +1,13 @@
+1. Date functions.
+   Select current_date ==> returns CCYY-MM-DD (2017-12-07)
+   Select current_timestamp ==> returns 2017-12-08 22:13:46.932
+   Select date_format(current_date,'Y') ==> returns 2017
+   select date_format(current_date, 'MM') ==> returns 12 (one M also returns same)
+   select date_format(current_date, 'MMM') ==> returns Dec, but more than 3 Ms returns December.
+   select to_date(order_date) from orders; => returns CCYY-MM-DD format.
+   select date_add(order_date, 10) from orders; => adds 10 days and returns CCYY-MM-DD format.
+   select cast(substr(order_date,6,2) as int) from orders; ==> extract month and typecast to int.
+   select date_format(order_date, 'YMMMD') from orders; ==> converts to CCYY-MMM-DD format.
+   
+2. 
+  
