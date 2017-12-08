@@ -14,7 +14,7 @@ city string,
 state string,
 zip int)
 row format delimited fields terminated by ','
-stored as text;
+stored as textfile;
 
 4. Load files from local file system. The file in local or HDFS location be deleted with load command.
 
