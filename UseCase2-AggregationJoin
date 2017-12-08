@@ -1,0 +1,32 @@
+Problem) Get daily revenue by product considering completed and closed orders.
+Data needs to be sorted in ascending order by date and then descending by revenue for each product that day..
+Data should be delimited by "," in this order; order_date, daily_revenue_per_product, product_name..
+
+
+//create a paired RDD (order_id, order_date) for Complete and Closed orders.
+val ordersRDD = sc.textFile("/user/cloudera/data-master/retail_db/orders").
+filter(o => o.split(",")(3) == "COMPLETE" || o.split(",")(3) == "CLOSED").
+map(o => (o.split(",")(0).toInt, o.split(",")(1)))
+
+// Create a paired RDD (order_id, (product_id, -subtotal))
+val orderItemsRDD = sc.textFile("/user/cloudera/data-master/retail_db/order_items").
+map(oi => (oi.split(",")(1).toInt,(oi.split(",")(2).toInt, - oi.split(",")(4).toFloat)))
+
+// join on order_id
+val ordersJoinOrderid = orderItemsRDD.join(ordersRDD)
+
+//First change key ((order_date, product_id),subtotla) then aggregate the total (-ve value). Change the pair to //((order_date,price),product_id) and sort.
+val ordersByDateByRev = ordersJoinOrderid.map(j => ((j._2._2,j._2._1._1), j._2._1._2)).
+reduceByKey((a,b) => a + b).map(j => ((j._1._1, j._2), j._1._2)).sortByKey()
+
+//change the key to (product_id, (Date,total)). Make the total to +ve.
+val productsKey = ordersByDateByRev.map(p => (p._2, (p._1._1, -p._1._2)))
+
+//Read products data and make paired RDD (product_id, product_name)
+val productsRDD = sc.textFile("/user/cloudera/data-master/retail_db/products").
+map(p => (p.split(",")(0).toInt, p.split(",")(2)))
+
+//join to get the output in the required format.
+val orderByDateRev =  productsKey.join(productsRDD).map(p => p._2._1._1 + "," + p._2._2 + "," + p._2._1._2 )
+
+orderByDateRev.saveAsTextFile("/user/cloudera/Practice/orderByDateRev")
