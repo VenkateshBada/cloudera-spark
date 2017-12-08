@@ -1,0 +1,36 @@
+1. To see the Hive metastore directory.
+   set hive.metstore.warehouse.dir
+2. Create a database
+ create database if not exists retail_db_tx;
+ 
+3. create a table
+ create external table if not exists customers(
+customerNumber int,
+customerName string,
+contactLName string,
+contactFName string,
+address string,
+city string,
+state string,
+zip int)
+row format delimited fields terminated by ','
+stored as text;
+
+4. Load files from local file system. The file in local or HDFS location be deleted with load command.
+
+Load data local inpath '/home/maria_dev/data/retail_db/customers' into table customers;
+
+5. create an ORC table and load data from existing table.
+create external table if not exists customers_orc(
+customerNumber int,
+customerName string,
+contactLName string,
+contactFName string,
+address string,
+city string,
+state string,
+zip int)
+row format delimited fields terminated by ','
+stored as ORC;
+
+insert into customers_orc select * from customers;
