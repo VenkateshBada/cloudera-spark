@@ -1,0 +1,16 @@
+Problem) Get daily revenue by product considering completed and closed orders.
+Data needs to be sorted in ascending order by date and then descending by revenue for each product that day..
+Data should be delimited by "," in this order; order_date, daily_revenue_per_product, product_name..
+
+
+select to_date(C.order_date), D.product_name, C.subtotal from products D 
+join 
+(select A.order_date, B.order_item_product_id, cast(sum(B.order_item_subtotal) as float) subtotal 
+from order_items B join 
+(select order_id, order_date from orders where order_status = 'COMPLETE' or order_status = 'CLOSED' ) A 
+on A.order_id = B.order_item_order_id
+group by A.order_date, B.order_item_product_id 
+order by A.order_date, B.order_item_product_id desc) C 
+on D.product_id = C.order_item_product_id;
+
+need to add "," delimiter and store the data onto a file.
