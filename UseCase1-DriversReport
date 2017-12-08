@@ -1,4 +1,6 @@
-Problem statement: Read the drivers data (, seperated) from transaction text file from HDFS path /user/cloudera/data/Drivers. Generate a report with November changes to the drivers (Use transaction creation date MM/DD/CCYY). Also mask the SPI data in the report. Save the report in HDFS location /user/cloudera/Practice/DriverNovReport.
+Problem statement: Read the drivers data (, seperated) from transaction text file from HDFS path /user/cloudera/data/Drivers. 
+Generate a report with November changes to the drivers (Use transaction creation date MM/DD/CCYY). Also mask the SPI data in the report.
+Save the report in HDFS location /user/cloudera/Practice/DriverNovReport.
 
 Input file Driver structure is of type.
 
@@ -58,7 +60,8 @@ def maskDL(DL: String): String = {
 }
 //Actual logic here.
 
-val DriversNovData = sc.textFile("/user/cloudera/data/Drivers").filter(d => substring(d.split(",")(0),0,2) == "11" && substring(d.split(",")(0),6) == "2017")
+val DriversNovData = sc.textFile("/user/cloudera/data/Drivers").
+filter(d => substring(d.split(",")(0),0,2) == "11" && substring(d.split(",")(0),6) == "2017")
 
 val MaskedData = DriversNovData.map(n => {
 val rec = n.split(",")
