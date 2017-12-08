@@ -20,7 +20,10 @@ stored as textfile;
 
 Load data local inpath '/home/maria_dev/data/retail_db/customers' into table customers;
 
-5. create an ORC table and load data from existing table.
+5. Alter a column type in the table.
+alter table customers change zip zip string;
+
+6. create an ORC table and load data from existing table.
 create external table if not exists customers_orc(
 customerNumber int,
 customerName string,
@@ -29,7 +32,7 @@ contactFName string,
 address string,
 city string,
 state string,
-zip int)
+zip string)
 row format delimited fields terminated by ','
 stored as ORC;
 
