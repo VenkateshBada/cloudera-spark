@@ -1,0 +1,19 @@
+1. To login to Hortonworks using Cygwin.
+   ssh root@localhost -p 2222
+   or
+   ssh root@127.0.0.1 -p 2222
+   enter the password (default is hadoop).
+   
+   Use maria_dev for spark features.
+
+2. Transferring files from FileZilla to HortonWorks.
+Add Host as "sftp://127.0.0.1"
+Add username and password as maria_dev
+Add port as 2222.
+
+Select the Hortonworks folder to copy into and then right click on the folder from windows and press upload.
+
+Alternatively we can use scp command, but its not working for me.
+scp -P 2222 C:\Venkatesh\Data maria_dev@127.0.0.1/home/maria_dev/data
+
+3. 
