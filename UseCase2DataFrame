@@ -1,7 +1,7 @@
 Problem) Get daily revenue by product considering completed and closed orders.
 Data needs to be sorted in ascending order by date and then descending by revenue for each product that day.. Use DataFrame to extract
 and save data. Store the result in Hive table result and store data in HDFS in orc format.
-Output Data should be in this order; order_date, product_id, product_name, daily_revenue_per_product.
+Output Data should be in this order; order_date, product_name, daily_revenue_per_product.
 
 
 sqlContext.setConf("spark.sql.shuffle.partitions", "2")
@@ -24,3 +24,33 @@ result1DF.write.orc("/user/maria_dev/Practice/revenuePerDay")
 
 //store the result onto Hive table result. Table already existing. 
 result1DF.insertInto("result")
+
+// Also using HDFS files, register as Temp tables, solution as follows.
+======================================================================
+
+val ordersDF = sc.textFile("/user/maria_dev/Practice/retail_db/orders").
+  map(o => {(o.split(",")(0).toInt, o.split(",")(1), o.split(",")(3))}).
+  toDF("order_id", "order_date", "order_status")
+
+val orderItemsDF = sc.textFile("/user/maria_dev/Practice/retail_db/order_items").
+  map(oi => {(oi.split(",")(1).toInt, oi.split(",")(2).toInt, oi.split(",")(4).toFloat)}).
+  toDF("order_id", "order_product_id", "order_subtotal")
+  
+val productsDF = sc.textFile("/user/maria_dev/Practice/retail_db/products").
+  map(p => {(p.split(",")(0).toInt, p.split(",")(2))}).
+  toDF("product_id", "product_name")
+  
+   ordersDF.registerTempTable("orders")
+   orderItemsDF.registerTempTable("order_items")
+   productsDF.registerTempTable("products") 
+ 
+val resultDF = sqlContext.sql("SELECT o.order_date, p.product_id, p.product_name, " +
+"round(sum( oi.order_item_subtotal),2)  revenuePerDay " +
+"FROM orders o JOIN order_items oi " +
+"ON o.order_id = oi.order_item_order_id " +
+"JOIN products p ON p.product_id = oi.order_item_product_id " +
+"WHERE o.order_status IN ('COMPLETE', 'CLOSED') " +
+"GROUP BY o.order_date, p.product_id, product_name " +
+"ORDER BY o.order_date, p.product_id desc")
+
+//saving is same as above in the first way of solution.
