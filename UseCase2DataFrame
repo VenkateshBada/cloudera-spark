@@ -18,8 +18,9 @@ val resultDF = sqlContext.sql("SELECT o.order_date, p.product_id, p.product_name
 "GROUP BY o.order_date, p.product_id, product_name " +
 "ORDER BY o.order_date, p.product_id desc")
 
+val result1DF = resultDF.select("order_date", "product_name", "reveneuPerDay")
 //store the result onto HDFS
-resultDF.write.orc("/user/maria_dev/Practice/revenuePerDay")
+result1DF.write.orc("/user/maria_dev/Practice/revenuePerDay")
 
 //store the result onto Hive table result. Table already existing. 
-resultDF.insertInto("result")
+result1DF.insertInto("result")
