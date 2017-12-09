@@ -16,4 +16,5 @@ Select the Hortonworks folder to copy into and then right click on the folder fr
 Alternatively we can use scp command, but its not working for me.
 scp -P 2222 C:\Venkatesh\Data maria_dev@127.0.0.1/home/maria_dev/data
 
-3. 
+3. To use HiveContext from sqlContext, declare as below.
+val sqlContext = new org.apache.spark.sql.hive.HiveContext(sc)
