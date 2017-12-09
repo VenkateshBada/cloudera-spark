@@ -7,6 +7,8 @@ Output Data should be in this order; order_date, product_id, product_name, daily
 sqlContext.setConf("spark.sql.shuffle.partitions", "2")
 val sqlContext = new org.apache.spark.sql.hive.HiveContext(sc)
 
+sqlContext.sql("use retail_db")
+
 val resultDF = sqlContext.sql("SELECT o.order_date, p.product_id, p.product_name, " +
 "round(sum( oi.order_item_subtotal),2)  revenuePerDay " +
 "FROM orders o JOIN order_items oi " +
