@@ -33,3 +33,6 @@ a1.sinks.k1.channel = c1
    telnet localhost 44444
    
 Enter data in Telnet session and it will be streamed to Netcat server.
+======================================================================
+
+1. Usually Exec Source is used to get the webserver logs. 
