@@ -1,2 +1,13 @@
 1. To go to home folder from anywhere. type "CD ~/" and enter.
 2. Replace a string in Vi editor --> %s/str1/str2
+3. Repeat the line (Y in esc mode and p)
+4. Delete the line D
+5. Exiting
+
+:x	-> Exit, saving changes
+:q	-> Exit as long as there have been no changes
+ZZ	-> Exit and save changes if any have been made
+:q!	-> Exit and ignore any changes
+
+cheatsheat
+http://www.lagmonster.org/docs/vi.html
