@@ -11,3 +11,5 @@ ZZ	-> Exit and save changes if any have been made
 
 cheatsheat.
 http://www.lagmonster.org/docs/vi.html
+
+6. file-name|wc -l -> gives number of lines.
