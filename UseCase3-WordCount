@@ -1,0 +1,15 @@
+Streaming Word count, develop program in windows and create jar file.
+====================================================================
+
+1. First need to create build.sbt in the project base directory with spark streaming dependencies. Before src/main/scala directory.
+   build.sbt is similar to pom.xml
+   
+   name := "retail"
+   version := "1.0"
+   scalaVersion = "2.11.11"
+
+   libraryDependencies += "org.apache.spark" % "spark-core_2.10" % "1.6.3"
+   libraryDependencies += "org.apache.spark" % "spark-streaming_2_10" % "1.6.3"
+
+   
+2. 
