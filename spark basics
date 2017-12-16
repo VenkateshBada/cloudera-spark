@@ -41,7 +41,21 @@
       employeeDF.write.format("com.databricks.spark.avro").save("/user/cloudera/Practice/employee_avro")   
       //save using write method.
       employeeDF.write.orc("/user/cloudera/Practice/employee_orc")
+     
+4. Converting List into RDD.
+    val l_RDD = sc.parallelize("list1")
+
+5. Converting RDD into DataFrame and registering as Temporary table. Note registerTempTable is deprecated and need to use 
+   createOrReplaceTempView in 2.0 version.
+    val ordersRDD = sc.textFile("/user/cloudera/data/orders")
+    val ordersDF = ordersRDD.map(rec => {
+      val o = rec.split(",")
+      o(0).toInt, o(1), o(2).toInt, o(3)}).toDF("order_id", "order_date", order_customer_id", "order_status")
       
+      ordersDF.registerTempTable("orders")
+      
+ 6. Converting DataFrame into RDD. The data in the converted RDD could be of org.apache.spark.sql.Row. 
+     val ordersRDD = ordersDF.rdd
       
       
    
