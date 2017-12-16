@@ -1,6 +1,6 @@
 Problem) Get daily revenue by product considering completed and closed orders.
 Data needs to be sorted in ascending order by date and then descending by revenue for each product that day.. Use DataFrame to extract
-and save data. Store the result in Hive table result and store data in HDFS in orc format.
+and save data. Store the result in Hive table result and store data in HDFS in orc format and avro format.
 Output Data should be in this order; order_date, product_name, daily_revenue_per_product.
 
 
@@ -19,8 +19,11 @@ val resultDF = sqlContext.sql("SELECT o.order_date, p.product_id, p.product_name
 "ORDER BY o.order_date, p.product_id desc")
 
 val result1DF = resultDF.select("order_date", "product_name", "reveneuPerDay")
-//store the result onto HDFS
+//store the result onto HDFS in orc format
 result1DF.write.orc("/user/maria_dev/Practice/revenuePerDay")
+
+//store the result onto HDFS in avro format
+result1DF.write.format("com.databricks.spark.avro").save(""/user/maria_dev/Practice/revenuePerDayAvro")
 
 //store the result onto Hive table result. Table already existing. 
 result1DF.insertInto("result")
