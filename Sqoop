@@ -1,0 +1,20 @@
+1. Different file formats.
+    text file using as-textfile (default)
+    sequence file using as-sequencefile
+    Avro file using as-avrofile
+    parquet file using as-parquetfile
+    
+ 2. Different field and line delimiters.
+    --fields-terminated-by ,  (default)
+    --fields-terminated-by "\t"  (tab delimiter)
+    --lines-terminated-by "\n"  (default)
+    
+ 3. Null columns handling
+   -- null-string ""
+   --null-non-string -1
+   
+ 4. compression.
+   --compress to enable the compression
+   --compression-codec to use specific compression algorithm
+   --compression-codec org.apache.hadoop.io.compress.GzipCodec
+   --compression-codec org.apache.hadoop.io.compress.SnappyCodec
