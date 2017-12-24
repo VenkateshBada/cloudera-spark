@@ -2,6 +2,7 @@
     val employeeFile = scala.io.Source.fromFile("/home/cloudera/data/employee/part-m-00000").getLines.toList
     val employeeRDD = sc.parallelize(emplyeeFile)
     
+    val employeeRDD = sc.textFile("file:///home/cloudera/data/employee")
 
 2. Reading from HDFS.
  (a) Read a text file. No need to specify compression codec.
@@ -18,7 +19,10 @@
      
      val employeeRDD = sqlContext.read.format("com.databricks.spark.avro").load("/user/cloudera/data/employee1/000000_0.avro")
      
-3. Storing to HDFC. Only text File format needs delimiters and other formats such as jSon, parquet do not need delimiters to specify.
+ 3. Reading from s3.
+     val employeeRDD = sc.textFile("s3n://bucket/emplyoee.data")
+     
+ 4. Storing to HDFC. Only text File format needs delimiters and other formats such as jSon, parquet do not need delimiters to specify.
    (a) save as text file
       RDD.saveAsTextFile("/user/cloudera/Practice/employee")
       
