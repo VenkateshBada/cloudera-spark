@@ -1,0 +1,6 @@
+1. Using Hive meta store from spark shell
+   import org.apache.spark.sql.hive.HiveContext
+   import sqlContext.implicits._
+   val hiveContext = new HiveContext(sc)
+   
+   hiveContext.sql("show databases")
