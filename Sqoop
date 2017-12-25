@@ -36,6 +36,19 @@
   7. For hive import, first data is loaded onto hdfs location /user/cloudera/table-name and then imports into hive database. if table is
      not created, then hive import creates the table. 
      Default fields seperator in hive is ascii value 1 or Ctrl + A character.
-       
+     
+ 8. sqoop import command to import orders table to hive with delimiter change (Ctrl + a) to , and a different hive table name.
+    sqoop import \
+    --connect jdbc:mysql://localhost/retail_db \
+    --table orders \
+    --username retail_dba --password cloudera \
+    --hive-import \
+    --hive-database sqoop_examples \
+    --hive-table orders_ex \
+    --fields-terminated-by ,
+
+
+ 
+     
       
      
