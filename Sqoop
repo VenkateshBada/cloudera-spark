@@ -14,7 +14,11 @@
    --null-non-string -1
    
  4. compression.
-   --compress to enable the compression
+   --compress to enable the compression and then pass the following commpression algorithm
    --compression-codec to use specific compression algorithm
    --compression-codec org.apache.hadoop.io.compress.GzipCodec
    --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+
+ 5. Adding WHERE clause in query sqoop import and we need to use split-by column
+    --query "select * from orders where \$CONDITIONS and order_date like '2014-01%'"
+    --split-by order_id
