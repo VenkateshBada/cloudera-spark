@@ -33,5 +33,9 @@
       --target-dir /user/cert/problem1/solution
        No need to specify file format and fields terminated as asked are default parameters.
        
+  7. For hive import, first data is loaded onto hdfs location /user/cloudera/table-name and then imports into hive database. if table is
+     not created, then hive import creates the table. 
+     Default fields seperator in hive is ascii value 1 or Ctrl + A character.
+       
       
      
