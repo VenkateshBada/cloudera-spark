@@ -22,3 +22,16 @@
  5. Adding WHERE clause in query sqoop import and we need to use split-by column
     --query "select * from orders where \$CONDITIONS and order_date like '2014-01%'"
     --split-by order_id
+
+ 6. Sample from Cloudera certification page. 
+    import all of customer table's data from mysql problem1 database on gateway node to hdfs location /user/cert/problem1/soultion .
+    username and password are cloudera. Output should be text and , delimited columns.
+      sqoop import \
+      --connect jdbc:mysql://gateway/problem1 \
+      --username cloudera --password cloudera \
+      --table customer \
+      --target-dir /user/cert/problem1/solution
+       No need to specify file format and fields terminated as asked are default parameters.
+       
+      
+     
