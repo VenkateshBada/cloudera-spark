@@ -54,12 +54,14 @@
       --warehouse-dir /user/cloudera/Practice/sqoop/data/retail_db
      
  10. sqoop export - sqoop export takes export-dir for hdfs source directory. Table should be created in mysql database before the 
-     sqoop export command executed. If there are a mismatch with table columns and HDFS data, then columns can be used.
+     sqoop export command executed. If there are a mismatch with table columns and HDFS data, then columns can be used. If the
+     delimiter is different then it can be specified.
      
      sqoop export \
      --connect jdbc:mysql://localhost/retail_db_txt \
      --table orders \
      --username retail_dba --password cloudera \
      --export-dir /user/hive/warehouse/sqoop_examples.db/orders \
-     --columns order_id, order_date, order_customer_id, order_status
+     --columns order_id, order_date, order_customer_id, order_status \
+     --input-fields-terminated-by "\001"
      
