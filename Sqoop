@@ -34,7 +34,7 @@
        No need to specify file format and fields terminated as asked are default parameters.
        
   7. For hive import, first data is loaded onto hdfs location /user/cloudera/table-name and then imports into hive database. if table is
-     not created, then hive import creates the table. 
+     not created, then hive import creates the table. If the import is successful, then the data in the above hdfs staging location delete.
      Default fields seperator in hive is ascii value 1 or Ctrl + A character.
      
  8. sqoop import command to import orders table to hive with delimiter change (Ctrl + a) to , and a different hive table name.
@@ -47,8 +47,11 @@
     --hive-table orders_ex \
     --fields-terminated-by ,
 
-
- 
+ 9. import-all-tables - warehouse-dir is mandatory here.
+     sqoop import-all-tables \
+      --connect jdbc:mysql://localhost/retail_db \
+      --username retail_dba --password cloudera \
+      --warehouse-dir /user/cloudera/Practice/sqoop/data/retail_db
      
       
      
