@@ -1,0 +1,14 @@
+1. Get details of inactive customers using orders and customers
+
+solution1: from hive tables using spark sql
+
+val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+val resultDF = hiveContext.sql("select contactlname, contactfname " + 
+" from retail_db_txt.customers left outer join  retail_db_txt.orders  " + 
+"on customernumber = order_customer_id " +
+"where order_id is null")
+
+resultDF.rdd.write.("/user/maria_dev/practice/excercise2", "text")
+
+solution2: using RDDs
+
