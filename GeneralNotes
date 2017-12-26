@@ -5,6 +5,8 @@
    enter the password (default is hadoop).
    
    Use maria_dev for spark features.
+   
+   from vmware, ssh maria_dev@192.168.59.129 -p 2222
 
 2. Transferring files from FileZilla to HortonWorks.
 Add Host as "sftp://127.0.0.1"
