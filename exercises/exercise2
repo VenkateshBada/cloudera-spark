@@ -1,0 +1,34 @@
+Exercise 02 - Get details of inactive customers.
+Target Columns: customer_lname, customer_fname
+Number of files - 1
+Target Directory: HDFS location
+Target File Format: TEXT
+Target Delimiter: comma (“, ”)
+Compression: N/A
+
+solution1: using RDDs
+
+val ordersRDD = sc.textFile("/user/maria_dev/data-master/retail_db/orders").map(o => (o.split(",")(2).toInt, o))
+val customerRDD = sc.textFile("/user/maria_dev/data-master/retail_db/customers").map(c => (c.split(",")(0).toInt, c))
+
+val custJoinOrders = customerRDD.leftOuterJoin(ordersRDD)
+# record looks like (8575,(8575,Mary,Mueller,XXXXXXXXX,XXXXXXXXX,9714 Emerald Bear Lookout,Caguas,PR,00725,None))
+
+val resultRDD = custJoinOrders.filter(r => r._2._2 == None).map(r => r._2._1.split(",")(3) + ", " + r._2._1.split(",")(2))
+resultRDD.saveAsTextFile("/user/maria_dev/practice/exercise2/sol2")
+
+
+solution2: from hive QL using spark sql
+
+val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+val resultDF = hiveContext.sql("select contactlname, contactfname " + 
+" from retail_db_txt.customers left outer join  retail_db_txt.orders  " + 
+"on customernumber = order_customer_id " +
+"where order_id is null")
+
+resultDF.rdd.write.("/user/maria_dev/practice/exercise2/sol1", "text")
+
+solution3: Using DataFrames.
+
+val ordersDF = sc.textFile("/user/maria_dev/data-master/retail_db/orders").
+   toDF()
