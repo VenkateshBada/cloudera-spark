@@ -1,4 +1,24 @@
-1. Get details of inactive customers using orders and customers
+1. Get monthly crime count by type.
+   Structure of data (ID,Case Number,Date,Block,IUCR,Primary Type,Description,Location Description,Arrest,Domestic,
+   Beat,District,Ward,Community Area,FBI Code,X Coordinate,Y Coordinate,Year,Updated On,Latitude,Longitude,Location)
+   Get monthly count of primary crime type, sorted by month in ascending and number of crimes per type in descending order
+   
+solution
+    
+val crimeRDD = sc.textFile("/user/maria_dev/crime").map(r => {
+  val c = r.split(",")
+  (c(0), c(1), c(2), c(3), c(4), c(5), c(6), c(7), c(8), c(9), c(10), c(11), c(12), c(13), c(14), c(15), c(16), c(17), c(18), c(19), c(20), c(21))
+})
+val crimeDF = crimeRDD.toDF("ID", "CaseNumber", "Date", "Block", "IUCR", "PrimaryType", "Description", "Location_descr", 
+ "Arrest", "Domestic", "Beat", "District", "Ward", "CommunityArea", "FBICode", "XCoordinate", "YCoordinate", "Year", "UpdatedOn", "Latitude", "Longitude", "Location")
+
+
+select date_format(Date,mmm) month, Primary_type, count(1) count from crimes
+group by date_format("Date", mmm), Primary_type
+order by date_format("Date", mmmm), count desc
+
+
+2. Get details of inactive customers using orders and customers
 
 solution1: from hive tables using spark sql
 
@@ -8,7 +28,18 @@ val resultDF = hiveContext.sql("select contactlname, contactfname " +
 "on customernumber = order_customer_id " +
 "where order_id is null")
 
-resultDF.rdd.write.("/user/maria_dev/practice/excercise2", "text")
+resultDF.rdd.write.("/user/maria_dev/practice/exercise2/sol1", "text")
 
 solution2: using RDDs
 
+val ordersRDD = sc.textFile("/user/maria_dev/data-master/retail_db/orders").map(o => (o.split(",")(2).toInt, o))
+val customerRDD = sc.textFile("/user/maria_dev/data-master/retail_db/customers").map(c => (c.split(",")(0).toInt, c))
+
+val custJoinOrders = customerRDD.leftOuterJoin(ordersRDD)
+(8575,(8575,Mary,Mueller,XXXXXXXXX,XXXXXXXXX,9714 Emerald Bear Lookout,Caguas,PR,00725,None))
+
+val resultRDD = custJoinOrders.filter(r => r._2._2 == None).map(r => r._2._1.split(",")(3) + ", " + r._2._1.split(",")(2))
+resultRDD.saveAsTextFile("/user/maria_dev/practice/exercise2/sol2")
+
+
+3. 
