@@ -1,0 +1,5 @@
+Exercise 03 - Get top 3 crime types based on number of incidents in RESIDENCE area.
+Output Fields: Crime Type, Number of Incidents
+Output File Format: JSON
+Output Delimiter: N/A
+Output Compression: No
