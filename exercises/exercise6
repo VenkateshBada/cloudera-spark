@@ -1,0 +1,11 @@
+Exercise 06 - Get details of top 5 customers by revenue for each month.
+Tables should be in hive database - <YOUR_USER_ID>_retail_db_txt
+orders
+order_items
+customers
+Time to create database and tables need not be counted. Make sure to go back to Spark SQL module and create tables and load data
+Get details of top 5 customers by revenue for each month
+We need to get all the details of the customer along with month and revenue per month
+Data need to be sorted by month in ascending order and revenue per month in descending order
+Create table top5_customers_per_month in <YOUR_USER_ID>_retail_db_txt
+Insert the output into the newly created table
