@@ -30,5 +30,24 @@ resultDF.rdd.write.("/user/maria_dev/practice/exercise2/sol1", "text")
 
 solution3: Using DataFrames.
 
-val ordersDF = sc.textFile("/user/maria_dev/data-master/retail_db/orders").
-   toDF()
+val ordersDF = sc.textFile("/user/cloudera/data-master/retail_db/orders").map(r => {
+ val o = r.split(",")
+ (o(0).toInt, o(1), o(2).toInt, o(3))
+}).toDF("order_id", "order_date", "order_customer_id", "order_status")
+
+
+val customersDF = sc.textFile("/user/cloudera/data-master/retail_db/customers").map(r => {
+ val c = r.split(",")
+ (c(0).toInt, c(1), c(2), c(3), c(4), c(5), c(6), c(7))
+}).toDF("customerNumber", "customerName", "contactLName", "contactFName", "address", "city", "state", "zip" )
+
+ordersDF.registerTempTable("orders")
+customersDF.registerTempTable("customers")
+
+val inactiveCustomers = sqlContext.sql("select contactLName, contactFName" +
+ " from customers left outer join orders on " +
+ "customerNumber =  order_customer_id " +
+ "where order_customer_id is null")
+
+#coalesce(1,true) is transformation makes 1 partition.
+ inactiveCustomers.map(r => (r(0) + ", " + r(1))).coalesce(1,true).saveAsTextFile("/user/cloudera/Practice/exercise1/sol3")
