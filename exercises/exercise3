@@ -3,3 +3,18 @@ Output Fields: Crime Type, Number of Incidents
 Output File Format: JSON
 Output Delimiter: N/A
 Output Compression: No
+
+solution1.
+
+val data = sc.textFile("/user/cloudera/data-master/crime")
+val header = data.first
+val crimeRDD = data.filter(r => r != header)
+val crimeByResidence = crimeRDD.map(r => ((r.split(",")(7), r.split(",")(5)), 1)).reduceByKey((a,b) => a + b).filter(r => r._1._1 == "RESIDENCE")
+
+val top3Crimes = crimeByResidence.map(r => (r._1._2, r._2)).sortBy(r => -r._2).take(3).toList
+
+val top3RDD = sc.parallelize(top3Crimes)
+
+top3RDD.toDF.write.json("/user/cloudera/Practice/exercise3/sol1")
+
+val crimesSortedBy = crimeByResidence.sortBy(r => -r._2).map
