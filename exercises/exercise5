@@ -11,3 +11,15 @@ Target Directory: /user/<YOUR_USER_ID>/solutions/solution05/wordcount
 Target File Format: Avro
 Target fields: word, count
 Compression: N/A or default
+
+
+solution1.
+
+val data = sc.textFile("/user/cloudera/data-master/crime").flatMap(r => r.split(",")).flatMap(r => r.split(" ")).map(r => (r,""))
+
+val wordCountList = data.countByKey.toList
+val wordCountRDD = sc.parallelize(wordCountList)
+
+val wordCountDF = wordCountRDD.coalesce(8, true).toDF
+
+#Writing to avro is giving error. Need to work on this.
