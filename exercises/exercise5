@@ -20,6 +20,8 @@ val data = sc.textFile("/user/cloudera/data-master/crime").flatMap(r => r.split(
 val wordCountList = data.countByKey.toList
 val wordCountRDD = sc.parallelize(wordCountList)
 
+#Need to use coalesce(8, true) as requirement is to store in 8 output files.
 val wordCountDF = wordCountRDD.coalesce(8, true).toDF
 
-#Writing to avro is giving error. Need to work on this.
+#Writing to avro need databricks plugin.
+wordCountDF.write.format("com.databricks.spark.avro").save("/user/cloudera/Practice/exercise5/sol1")
