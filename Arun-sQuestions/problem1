@@ -42,12 +42,13 @@ ordersDF.registerTempTable("orders")
 orderItemsDF.registerTempTable("order_items")
 
 val result = sqlContext.sql("select to_date(from_unixtime(cast(order_date/1000 as bigint))) orders_date, " +
-"count(distinct (order_item_order_id)) ordersCount,  " +
-"sum(order_item_subtotal) total, order_status " +
-"from orders join order_items  " +
+"order_status, count(distinct(order_item_order_id)) totalOrders, " +
+"round(sum(order_item_subtotal), 2) total_amt " +
+"from orders join order_items " +
 "on order_id = order_item_order_id " +
 "group by to_date(from_unixtime(cast(order_date/1000 as bigint))), order_status " +
-"order by orders_date desc, order_status, total desc, ordersCount")
+"order by orders_date desc, order_status, total_amt desc, totalOrders desc")
+
 
 b). Using Spark SQL  - here order_date should be YYYY-MM-DD format
 
@@ -60,12 +61,23 @@ problem 4.
 /user/cloudera/problem1/result4a-gzip
 /user/cloudera/problem1/result4b-gzip
 /user/cloudera/problem1/result4c-gzip
- Store the result as parquet file into hdfs using snappy compression under folder
+
+result.write.option("compression", "spark.sql.parquet.compression.codec=gzip").
+  parquet("/user/cloudera/Practice/Arun/problem1/solution1-parquet")
+
+problem 5.
+Store the result as parquet file into hdfs using snappy compression under folder
 /user/cloudera/problem1/result4a-snappy
 /user/cloudera/problem1/result4b-snappy
 /user/cloudera/problem1/result4c-snappy
+
+result.write.option("compression", "spark.sql.parquet.compression.codec=snappy").
+parquet("/user/cloudera/Practice/Arun/problem1/solution1-snappy")
+
+problem 6.
 Store the result as CSV file into hdfs using No compression under folder
 /user/cloudera/problem1/result4a-csv
 /user/cloudera/problem1/result4b-csv
 /user/cloudera/problem1/result4c-csv
+
 create a mysql table named result and load data from /user/cloudera/problem1/result4a-csv to mysql table named result 
