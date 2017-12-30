@@ -80,4 +80,24 @@ Store the result as CSV file into hdfs using No compression under folder
 /user/cloudera/problem1/result4b-csv
 /user/cloudera/problem1/result4c-csv
 
-create a mysql table named result and load data from /user/cloudera/problem1/result4a-csv to mysql table named result 
+result.map(r => r(0) + "," + r(1) + "," + r(2) + "," + r(3)).
+ coalesce(1, true).saveAsTextFile("/user/cloudera/Practice/Arun/problem1/solution1")
+
+create a mysql table named result and load data from /user/cloudera/problem1/result4a-csv to mysql table named result.
+
+create table result(
+ order_date varchar(100),
+ order_status varchar(100),
+ ordersCount int,
+ total_amt numeric);
+
+create table temp1 select * from result;
+
+ sqoop export \
+ --connect jdbc:mysql://quickstart.cloudera/retail_db_practice \
+ --username root --password cloudera \
+ --table result \
+ --export-dir /user/cloudera/Practice/Arun/problem1/solution1 \
+ --staging-table temp1 \
+ --clear-staging-table
+
