@@ -8,6 +8,8 @@
    select date_add(order_date, 10) from orders; => adds 10 days and returns CCYY-MM-DD format.
    select cast(substr(order_date,6,2) as int) from orders; ==> extract month and typecast to int.
    select date_format(order_date, 'YMMMD') from orders; ==> converts to CCYY-MMM-DD format.
+   select date_format(order_date, 'YYYYMM') from orders; => convetst to CCYYMM format.
+   select date_format(order_date, 'YYYY/MM') from orders; => convetst to CCYY/MM format.
    
 2. 
   
