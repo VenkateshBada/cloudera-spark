@@ -1,7 +1,7 @@
 1. Different file formats.
     text file using as-textfile (default)
     sequence file using as-sequencefile
-    Avro file using as-avrofile
+    Avro file using as-avrodatafile
     parquet file using as-parquetfile
     
  2. Different field and line delimiters.
