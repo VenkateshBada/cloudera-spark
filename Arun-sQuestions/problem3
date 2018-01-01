@@ -11,6 +11,19 @@ sqoop import-all-tables \
 
 2. Create a metastore table that should point to the orders data imported by sqoop job above. Name the table orders_sqoop. 
 
+hadoop fs -get /user/hive/warehouse/retail_stage.db/orders/part-m-00000.avro /home/cloudera/arun/prob3
+
+avro-tools getschema /home/cloudera/arun/prob3/part-m-00000.avro > /home/cloudera/arun/prob3/orders.avsc
+
+create database retail_stage;
+use retail_stage;
+
+create table orders_sqoop 
+stored as avro
+location "/user/hive/warehouse/retail_stage.db/orders"
+tblproperties ('avro.schema.url'='/user/cloudera/problem3/orders.avsc');
+
+
 3. Write query in hive that shows all orders belonging to a certain day. This day is when the most orders were placed. 
 select data from orders_sqoop. 
 
