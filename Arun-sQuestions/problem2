@@ -34,7 +34,7 @@ val p = rec.split("\\|")
 val productsGRPByCat = productsRDD.map(p => (p._2, p)).groupByKey
 val maxPriceByCat = productsGRPByCat.map(p => p._2.toList.sortBy(r => -r._5).take(1))
 
-maxPriceByCat.flatMap(x => x).sortBy(x => x._2).saveAsTextFile("/user/cloudera/Practice/problem2/solutionRDD")
+val maxPriceByCat.flatMap(x => x).sortBy(x => x._2)
 
 Using dataframe
 
@@ -42,3 +42,5 @@ Using dataframe
 /user/cloudera/problem2/products/result-df
 /user/cloudera/problem2/products/result-sql
 /user/cloudera/problem2/products/result-rdd
+
+
