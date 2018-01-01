@@ -18,12 +18,25 @@ group has read and write permissions whereas others have just read and execute p
 
 hadoop fs -chmod 765 /user/cloudera/problem2/products/
 
-4. read data in /user/cloudera/problem2/products and do the following operations using a) dataframes api b) spark sql c) RDDs aggregateByKey method. Your solution should have three sets of steps. Sort the resultant dataset by category id
+4. read data in /user/cloudera/problem2/products and do the following operations using a) dataframes api b) spark sql 
+c) RDDs aggregateByKey method. Your solution should have three sets of steps. Sort the resultant dataset by category id
 filter such that your RDD\DF has products whose price is lesser than 100 USD
 on the filtered data set find out the higest value in the product_price column under each category
 on the filtered data set also find out total products under each category
 on the filtered data set also find out the average price of the product under each category
 on the filtered data set also find out the minimum price of the product under each category
+
+Using RDDs.
+val productsRDD = sc.textFile("/user/cloudera/problem2/products/").map(rec => {
+val p = rec.split("\\|")
+(p(0).toInt, p(1).toInt, p(2).toString, p(3).toString, p(4).toFloat, p(5).toString)}).filter(p => p._5 < 100)
+
+val productsGRPByCat = productsRDD.map(p => (p._2, p)).groupByKey
+val maxPriceByCat = productsGRPByCat.map(p => p._2.toList.sortBy(r => -r._5).take(1))
+
+maxPriceByCat.flatMap(x => x).sortBy(x => x._2).saveAsTextFile("/user/cloudera/Practice/problem2/solutionRDD")
+
+Using dataframe
 
 5. store the result in avro file using snappy compression under these folders respectively
 /user/cloudera/problem2/products/result-df
