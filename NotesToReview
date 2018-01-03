@@ -1,0 +1,14 @@
+1.   In scala substring index starts with 0. In hive, it starts from 1.
+2.   In case scala outer joins, the data will be return as Some[value] or None. To extract Some values, need to perform like this.
+       val ordersJoinCustomers = customersRDD.leftOuterJoin(ordersRDD)
+       #data is (2828,(2828,Mary,Smith,XXXXXXXXX,XXXXXXXXX,3282 Silent Autoroute,Fountain Valley,CA,92708,Some(40669,2014-04-02 00:00:00.0,2828,COMPLETE)))
+       #to get the some of records, need to use case class
+       val somerec =  ordersJoinCustomers.map(oc => oc._2._2 match { case Some(s: String) => s })
+       #to get the None records.
+       val nonerec =  ordersJoinCustomers.filter(oc => oc._2._2 == None).map(oc => oc._2._1)
+3.  To flatten a collection, always use flatMap. For each input records, multiple output records then use flatMap. if a single output record 
+       then use map.
+       #RDD[List[String]] can be flattened using flatMap.
+       rdd.flatMap(x => x)
+4.  sorted can be used if needs to be in ascending order. sortBy can be used if need to be in descending order.
+       
