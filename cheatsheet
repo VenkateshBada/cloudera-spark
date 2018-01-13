@@ -1,0 +1,25 @@
+1. Different compressions in sqoop.
+    a. SnappyCodec 
+      --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+    b. 
+
+2. Different compresions in spark.
+    a. gzip.
+       sqlContext.setConf("spark.sql.parquet.compression.codec","gzip");
+       dataFrameResult.write.parquet("/user/cloudera/problem1/result4a-gzip");
+       sqlResult.write.parquet("/user/cloudera/problem1/result4b-gzip");
+       comByKeyResult.write.parquet("/user/cloudera/problem1/result4c-gzip");
+    b. snappy.
+       sqlContext.setConf("spark.sql.parquet.compression.codec","snappy");
+       dataFrameResult.write.parquet("/user/cloudera/problem1/result4a-snappy");
+       sqlResult.write.parquet("/user/cloudera/problem1/result4b-snappy");
+       comByKeyResult.write.parquet("/user/cloudera/problem1/result4c-snappy");
+    c. GZipCodec.
+       sqlContext.setConf("spark.sql.parquet.compression.codec","snappy");
+       dataFile.repartition(1).write.parquet("/user/cloudera/problem5/parquet-snappy-compress");
+       dataFile.map(x=> x(0)+"\t"+x(1)+"\t"+x(2)+"\t"+x(3)).
+          saveAsTextFile("/user/cloudera/problem5/text-gzip-compress", classOf[org.apache.hadoop.io.compress.GzipCodec]);
+    d. uncompressed.
+       sqlContext.setConf("spark.sql.parquet.compression.codec","uncompressed");
+       parquetDataFile.write.parquet("/user/cloudera/problem5/parquet-no-compress");
+       sqlContext.setConf("spark.sql.avro.compression.codec","snappy");
