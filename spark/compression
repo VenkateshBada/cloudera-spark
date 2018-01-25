@@ -42,7 +42,7 @@
        sqlResult.write.parquet("/user/cloudera/problem1/result4b-snappy");
        comByKeyResult.write.parquet("/user/cloudera/problem1/result4c-snappy");
     
-   c.  repatition on RDD file.
+   c.  repartition on RDD file.
        dataFile.repartition(1).write.parquet("/user/cloudera/problem5/parquet-snappy-compress");
        dataFile.map(x=> x(0)+"\t"+x(1)+"\t"+x(2)+"\t"+x(3)).
           saveAsTextFile("/user/cloudera/problem5/text-gzip-compress", classOf[org.apache.hadoop.io.compress.GzipCodec]);
