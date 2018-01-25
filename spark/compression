@@ -4,18 +4,45 @@
     b. 
 
 2. Different compresions in spark.
-    a. gzip.
+    a. On RDD with text data, compressioncodec classes BZip2Codec, GzipCodec or SnappyCodec can be used.
+         
+         using compression BZip2Codec:
+         ordersRDD.saveAsTextFile("/user/cloudera/Practice/compression/orders_BZip2",classOf[org.apache.hadoop.io.compress.BZip2Codec])
+         The output looks like below:
+            /user/cloudera/Practice/compression/orders_BZip2/part-00001.bz2
+            /user/cloudera/Practice/compression/orders_BZip2/part-00002.bz2
+            /user/cloudera/Practice/compression/orders_BZip2/part-00003.bz2
+            
+          using compression GzipCodec
+          ordersRDD.saveAsTextFile("/user/cloudera/Practice/compression/orders_GZip", classOf[org.apache.hadoop.io.compress.GzipCodec])
+          The output looks lile below:
+               /user/cloudera/Practice/compression/orders_GZip/part-00000.gz
+               /user/cloudera/Practice/compression/orders_GZip/part-00001.gz
+               /user/cloudera/Practice/compression/orders_GZip/part-00002.gz
+               /user/cloudera/Practice/compression/orders_GZip/part-00003.gz
+         using compression SnappyCodec      
+          ordersRDD.saveAsTextFile("/user/cloudera/Practice/compression/orders_Snappy", classOf[org.apache.hadoop.io.compress.SnappyCodec])
+          The output looks like below:
+              /user/cloudera/Practice/compression/orders_Snappy/part-00000.snappy
+              /user/cloudera/Practice/compression/orders_Snappy/part-00001.snappy
+              /user/cloudera/Practice/compression/orders_Snappy/part-00002.snappy
+              /user/cloudera/Practice/compression/orders_Snappy/part-00003.snappy
+
+    b. on parquet files, need to set Compression codec, using setConf on sqlContext, before write method.
+    
+       using gzip.
        sqlContext.setConf("spark.sql.parquet.compression.codec","gzip");
        dataFrameResult.write.parquet("/user/cloudera/problem1/result4a-gzip");
        sqlResult.write.parquet("/user/cloudera/problem1/result4b-gzip");
        comByKeyResult.write.parquet("/user/cloudera/problem1/result4c-gzip");
-    b. snappy.
+      
+       using snappy.
        sqlContext.setConf("spark.sql.parquet.compression.codec","snappy");
        dataFrameResult.write.parquet("/user/cloudera/problem1/result4a-snappy");
        sqlResult.write.parquet("/user/cloudera/problem1/result4b-snappy");
        comByKeyResult.write.parquet("/user/cloudera/problem1/result4c-snappy");
-    c. GZipCodec.
-       sqlContext.setConf("spark.sql.parquet.compression.codec","snappy");
+    
+   c.  repatition on RDD file.
        dataFile.repartition(1).write.parquet("/user/cloudera/problem5/parquet-snappy-compress");
        dataFile.map(x=> x(0)+"\t"+x(1)+"\t"+x(2)+"\t"+x(3)).
           saveAsTextFile("/user/cloudera/problem5/text-gzip-compress", classOf[org.apache.hadoop.io.compress.GzipCodec]);
