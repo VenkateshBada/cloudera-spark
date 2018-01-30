@@ -58,6 +58,12 @@
       
       ordersDF.registerTempTable("orders")
       
+      #Dataframe also can be created in the following way from RDD, using case class.
+      case class Orders(order_id: Int, order_date: String, order_customer_id: Int, order_status: String)
+      
+      val ordersDF = ordersRDD.map(o => o.split(",")).map(o => Orders(o(0).toInt, o(1), o(2).toInt, o(3))).toDF
+      
+      
  6. Converting DataFrame into RDD. The data in the converted RDD could be of org.apache.spark.sql.Row. 
      val ordersRDD = ordersDF.rdd
       
