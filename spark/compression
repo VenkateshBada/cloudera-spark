@@ -1,3 +1,6 @@
+*   The compression codec class is same for both sqoop and RDD. 
+*   The RDD save method with compression can be used to save text file, sequence file and some instances json file DF using toJson.
+
 1. Different compressions in sqoop.
     a. SnappyCodec 
       --compression-codec org.apache.hadoop.io.compress.SnappyCodec
