@@ -1,45 +1,52 @@
 Problem 1:
-Using sqoop, import orders table into hdfs to folders /user/cloudera/Practice/problem1/solution/orders. File should be loaded as Avro File and 
+Using sqoop, import orders table into hdfs to folders /user/cloudera/Practice/prob1/sol1/orders. File should be loaded as Avro File and 
 use snappy compression
 
-sqoop import \
---connect jdbc:mysql://quickstart.cloudera/retail_db \
---username retail_dba --password cloudera \
---table orders \
---warehouse-dir /user/cloudera/Practice/problem1/solution \
---compress \
---compression-codec  org.apache.hadoop.io.compress.SnappyCodec \
---as-avrodatafile
+sqoop import --connect jdbc:mysql://localhost/retail_db \
+--username retail_dba --password cloudera --table orders \
+--target-dir /user/cloudera/practice/arun/prob1/sol1/orders \
+--as-avrodatafile --compress \
+--compression-codec org.apache.hadoop.io.compress.SnappyCodec
 
 problem 2. 
-Using sqoop, import order_items  table into hdfs to folders /user/cloudera/Practice/problem2/solution/order-items. Files should be loaded as avro file 
+Using sqoop, import order_items  table into hdfs to folders /user/cloudera/Practice/prob1/sol1/order-items. Files should be loaded as avro file 
 and use snappy compression
 
 sqoop import \
---connect jdbc:mysql://quickstart.cloudera/retail_db \
---username retail_dba --password cloudera \
---table order_items \
---target-dir /user/cloudera/Practice/problem2/solution/order-items \
---as-avrodatafile \
---compress \
+sqoop import --connect jdbc:mysql://localhost/retail_db \
+--username retail_dba --password cloudera --table order_items \
+--target-dir /user/cloudera/practice/arun/prob1/sol1/order-items \
+--as-avrodatafile -m 1 --compress \
 --compression-codec org.apache.hadoop.io.compress.SnappyCodec
 
 problem 3. 
-Using Spark Scala load data at /user/cloudera/Practice/problem1/solution/orders and /user/cloudera/Practice/problem1/solution/orders-items items as dataframes. 
+Using Spark Scala load data from /user/cloudera/practice/arun/prob1/sol1/order and /user/cloudera/practice/arun/prob1/sol1/order-items as dataframes. 
+Expected Intermediate Result: Order_Date , Order_status, total_orders, total_amount. 
 
-val ordersDF = sqlContext.load("/user/cloudera/Practice/problem1/solution/orders", "com.databricks.spark.avro")
-val orderItemsDF = sqlContext.load("/user/cloudera/Practice/problem1/solution/order-items", "com.databricks.spark.avro")
+
+val o_df = sqlContext.load("/user/cloudera/Practice/prob1/sol1/orders", "com.databricks.spark.avro")
+val oi_df = sqlContext.load("/user/cloudera/Practice/prob1/sol1/order-items", "com.databricks.spark.avro")
 
 
 Problem4. 
-Expected Intermediate Result: Order_Date , Order_status, total_orders, total_amount. In plain english, please find total orders 
+In plain english, please find total orders 
 and total amount per status per day. The result should be sorted by order date in descending, order status in ascending and total amount
 in descending and total orders in ascending. Aggregation should be done using below methods. However, sorting can be done using a
 dataframe or RDD. Perform aggregation in each of the following ways
 a). Just by using Data Frames API - here order_date should be YYYY-MM-DD format
 
-ordersDF.registerTempTable("orders")
-orderItemsDF.registerTempTable("order_items")
+val groupBydf = o_df.join(oi_df, o_df("order_id") === oi_df("order_item_order_id")).
+      groupBy(to_date(from_unixtime(col("order_date")/1000)).alias("orders_date"), col("order_status"))
+
+val aggdf = groupBydf.agg(round(sum(col("order_item_subtotal")), 2).alias("total_amt"), countDistinct(col("order_id")).alias("total_orders"))
+
+val resultdf = aggdf.sort(col("orders_date").desc, col("order_status"), col("total_amt").desc, col("total_orders"))
+
+
+b). Using Spark SQL  - here order_date should be YYYY-MM-DD format
+
+o_df.registerTempTable("orders")
+oi_df.registerTempTable("order_items")
 
 val result = sqlContext.sql("select to_date(from_unixtime(cast(order_date/1000 as bigint))) orders_date, " +
 "order_status, count(distinct(order_item_order_id)) totalOrders, " +
@@ -50,17 +57,16 @@ val result = sqlContext.sql("select to_date(from_unixtime(cast(order_date/1000 a
 "order by orders_date desc, order_status, total_amt desc, totalOrders desc")
 
 
-b). Using Spark SQL  - here order_date should be YYYY-MM-DD format
-
 c). By using combineByKey function on RDDS -- No need of formatting order_date or total_amount
 
 
 
 problem 4.
  Store the result as parquet file into hdfs using gzip compression under folder
-/user/cloudera/problem1/result4a-gzip
-/user/cloudera/problem1/result4b-gzip
-/user/cloudera/problem1/result4c-gzip
+/user/cloudera/prob1/sol1/result4a-gzip
+/user/cloudera/prob1/sol1/result4b-gzip
+/user/cloudera/prob1/sol1/result4c-gzip
+
 
 result.write.option("compression", "spark.sql.parquet.compression.codec=gzip").
   parquet("/user/cloudera/Practice/Arun/problem1/solution1-parquet")
@@ -71,17 +77,44 @@ Store the result as parquet file into hdfs using snappy compression under folder
 /user/cloudera/problem1/result4b-snappy
 /user/cloudera/problem1/result4c-snappy
 
-result.write.option("compression", "spark.sql.parquet.compression.codec=snappy").
-parquet("/user/cloudera/Practice/Arun/problem1/solution1-snappy")
+a)
+sqlContext.setConf("spark.sql.parquet.compression.codec","gzip")
+sqlContext.setConf("sqprk.sql.shuffle.partitions", "1")
+resultdf.write.parquet("/user/cloudera/practice/arun/prob1/sol1/result4a-gzip")
+
+result.write.option("compression", "spark.sql.parquet.compression.codec=gzip").parquet("/user/cloudera/practice/arun/prob1/sol1/result4b-gzip")
+
+
+b)
+resultdf.write.option("compression", "spark.sql.parquet.compression.codec=snappy").
+parquet("/user/cloudera/practice/arun/prob1/sol1/result4a-snappy")
+
+
+sqlContext.setConf("spark.sql.parquet.comression.codec", "snappy")
+sqlContext.setConf("spark.sql.shuffle.partitions", "1")
+
+resultdf.write.parquet("/user/cloudera/practice/arun/prob1/sol1/result4b-snappy")
+
+c) 
 
 problem 6.
 Store the result as CSV file into hdfs using No compression under folder
 /user/cloudera/problem1/result4a-csv
+
+val csvrec = resultdf.rdd.map(r => r.mkString(",")).map(r => r.split(",")(0) + "," + r.split(",")(1) + "," + r.split(",")(2).toFloat + "," + r.split(",")(3).toInt)
+//Above r.mkString is giving the same result without using map.
+
+csvrec.coalesce(1).saveAsTextFile("user/cloudera/practice/arun/prob1/sol1/result4a-csv")
+
+
 /user/cloudera/problem1/result4b-csv
 /user/cloudera/problem1/result4c-csv
 
 result.map(r => r(0) + "," + r(1) + "," + r(2) + "," + r(3)).
  coalesce(1, true).saveAsTextFile("/user/cloudera/Practice/Arun/problem1/solution1")
+
+
+result.map(r => r(0) + "," + r(1) + "," + r(2) + "," + r(3)).saveAsTextFile("user/cloudera/practice/arun/prob1/sol1/result4b-csv")
 
 create a mysql table named result and load data from /user/cloudera/problem1/result4a-csv to mysql table named result.
 
