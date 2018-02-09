@@ -8,4 +8,5 @@ solution1.
 
 val nyseList = scala.io.Source.fromFile("/home/cloudera/data-master/nyse/companylist_noheader.csv").getLines.toList
 val nyseRDD = sc.parallelize(nyseList)
-nyseRDD.coalesce(1,true).toDF.write.parquet("/user/cloudera/Practice/exercise4/sol1")
+nyseRDD.coalesce(1,true).toDF(stockticker: string, transactiondate: string, openprice: float, highprice: float, lowprice: float, closeprice: float, 
+volume: bigint).write.parquet("/user/cloudera/Practice/exercise4/sol1")
