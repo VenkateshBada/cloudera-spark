@@ -15,3 +15,15 @@ sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_u
 -e "   select count(1) from retail_db.customers where  customer_state is not null"
 
 2. import command:
+import onto HDFS with Snappy codec.
+sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
+--username retail_user --password itversity --table customers \
+--target-dir /user/venkateshb/practice/sqoop/customers_txt_snappy \
+--as-textfile --fields-terminated-by "\t" --lines-terminated-by "\n" \
+--compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+Four files with .snappy extension are created.
+/user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00000.snappy
+/user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00001.snappy
+/user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00002.snappy
+/user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00003.snappy
+
