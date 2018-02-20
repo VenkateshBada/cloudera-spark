@@ -27,3 +27,12 @@ Four files with .snappy extension are created.
 /user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00002.snappy
 /user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00003.snappy
 
+import onto HDFS with a single mapper Avro format, with Gzip.
+sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
+--username retail_user --password itversity --table customers -m 1 \
+--target-dir /user/venkateshb/practice/sqoop/customers_avro_Gzip \
+--compress --compression-codec org.apache.hadoop.io.compress.GzipCodec \
+--as-avrodatafile
+
+Sqoop import failed with the following error.
+Error: org.apache.avro.AvroRuntimeException: Unrecognized codec: gzip
