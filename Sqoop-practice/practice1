@@ -1,0 +1,17 @@
+1. Eval command:
+
+check the databases.
+sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_export --username retail_user --password itversity -e "show databases;"
+
+check tables:
+sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity -e "show tables"
+
+queries:
+sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity -e "select count(1) from customers"
+
+sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity -e "desc retail_db.customers"
+
+sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity  \
+-e "   select count(1) from retail_db.customers where  customer_state is not null"
+
+2. import command:
