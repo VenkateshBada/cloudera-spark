@@ -1,12 +1,12 @@
 1. Eval command:
 
-check the databases.
+#check the databases.
 sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_export --username retail_user --password itversity -e "show databases;"
 
-check tables:
+#check tables:
 sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity -e "show tables"
 
-queries:
+#queries:
 sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity -e "select count(1) from customers"
 
 sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity -e "desc retail_db.customers"
@@ -15,13 +15,14 @@ sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_u
 -e "   select count(1) from retail_db.customers where  customer_state is not null"
 
 2. import command:
-import onto HDFS with Snappy codec.
+#import onto HDFS with Snappy codec.
 sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
 --username retail_user --password itversity --table customers \
 --target-dir /user/venkateshb/practice/sqoop/customers_txt_snappy \
 --as-textfile --fields-terminated-by "\t" --lines-terminated-by "\n" \
 --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec
-Four files with .snappy extension are created.
+
+#Four files with .snappy extension are created.
 /user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00000.snappy
 /user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00001.snappy
 /user/venkateshb/practice/sqoop/customers_txt_snappy/part-m-00002.snappy
@@ -34,5 +35,34 @@ sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
 --compress --compression-codec org.apache.hadoop.io.compress.GzipCodec \
 --as-avrodatafile
 
-Sqoop import failed with the following error.
-Error: org.apache.avro.AvroRuntimeException: Unrecognized codec: gzip
+#Sqoop import failed with the following error.
+#Error: org.apache.avro.AvroRuntimeException: Unrecognized codec: gzip
+#Only snappy and deflate compression are allowed with Avro file format.
+#https://www.cloudera.com/documentation/enterprise/5-6-x/topics/cdh_ig_compression.html
+
+#Retrieve only certain fields from the table.
+sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
+--username retail_user --password itversity --table customers \
+--target-dir /user/venkateshb/practice/sqoop/customers_txt \
+--columns customer_id,customer_state,customer_zipcode  
+
+#Add null-string and non-null-string
+
+#First check the table with null value in the fields.
+
+sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db \
+--username retail_user --password itversity \
+-e "select * from customers where  customer_email is null or customer_city is null or customer_state is null or customer_zipcode is null"
+
+# could not find any row with null values.. But following is adding null-string and null-non-string.
+
+sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
+--username retail_db --password itversity --table customers \
+--target-dir /user/venkateshb/practice/sqoop/customers_txt_null \
+--null-string NA --null-non-String  0 \
+--fields-terminated-by "|" --lines-terminated-by "\n"
+
+#import onto hive database
+
+sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
+--username retail_db --password itversity --table customers \
