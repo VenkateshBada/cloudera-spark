@@ -1,3 +1,4 @@
+mysql -u retail_user -h ms.itversity.com -p
 1. Eval command:
 
 #check the databases.
