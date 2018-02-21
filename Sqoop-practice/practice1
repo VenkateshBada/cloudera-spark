@@ -65,4 +65,9 @@ sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
 #import onto hive database
 
 sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
---username retail_db --password itversity --table customers \
+--username retail_user --password itversity --table customers \
+--hive-import --create-hive-table --hive-overwrite \
+--warehouse-dir /apps/hive/warehouse/venkateshb_db.db\customers \
+--fields-terminated-by "," --as-avrodatafile \
+--compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+
