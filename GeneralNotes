@@ -20,3 +20,6 @@ scp -P 2222 C:\Venkatesh\Data maria_dev@127.0.0.1/home/maria_dev/data
 
 3. To use HiveContext from sqlContext, declare as below.
 val sqlContext = new org.apache.spark.sql.hive.HiveContext(sc)
+
+4. To start spark-shell with avro packages in itversity.
+spark-shell --master yarn --conf spark.ui.port=12345 --packages com.databricks:spark-avro_2.10:2.0.1
