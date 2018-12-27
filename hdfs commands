@@ -1,0 +1,12 @@
+>hdfs version
+>hdfs envvars
+  ==> HADOOP_HDFS_HOME gives the Hadoop home directory.
+>hdfs getconf -namenodes
+  ==> Lists list of name node/s
+HDFS commands guide
+https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
+
+>hdfs dfs [COMMAND [COMMAND_OPTIONS]] or
+>hadoop fs [COMMAND [COMMAND_OPTIONS]]
+Run a file system command on a file system supported in Hadoop. The various COMMAND_OPTIONS can be found at File System Shell Guide.
+
