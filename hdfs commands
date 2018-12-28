@@ -9,4 +9,17 @@ https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSComma
 >hdfs dfs [COMMAND [COMMAND_OPTIONS]] or
 >hadoop fs [COMMAND [COMMAND_OPTIONS]]
 Run a file system command on a file system supported in Hadoop. The various COMMAND_OPTIONS can be found at File System Shell Guide.
+>hadoop fs -chmod
 
+>hadoop fs -chgrp
+Changes group association of files
+>hadoop fs -chown
+Changes the permission of the files.
+Changes the owner of the files
+
+dfs.namenode.acls.enabled = true
+>hadoop fs -getfacl /user//hdfs
+gets acls of the file
+
+>hadoop fs -setfacl -m user:root:rwx /user/hdfs
+sets rwx on hdfs
